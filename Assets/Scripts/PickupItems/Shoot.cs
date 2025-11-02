@@ -2,12 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Repair : PickupItem
+public class Shoot : PickupItem
 {
-    public int RepairAmount = 10;
-
     public override void ApplyTo(Ship ship)
     {
-        ship.IncreaseHealth(RepairAmount);
+        ship.Gun.Shoot();
     }
 }

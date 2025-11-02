@@ -2,17 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpeedUp : MonoBehaviour
+public class SpeedUp : PickupItem
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private float _speedMultiplyAmount = 6f;
+    [SerializeField] private float _rotationSpeedMultiplyAmount = 2f;
 
-    // Update is called once per frame
-    void Update()
+    public override void ApplyTo(Ship ship)
     {
-        
+        ship.MultiplySpeed(_speedMultiplyAmount);
+        ship.MultiplyRotationSpeed(_rotationSpeedMultiplyAmount);
     }
 }

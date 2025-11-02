@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class MoveController : MonoBehaviour
 {
-    [SerializeField] private Ship _ship;
-
     private Rigidbody _rigidbody;
 
 
@@ -14,21 +12,15 @@ public class MoveController : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    public void MoveTo(Vector3 direction)
+    public void MoveTo(Vector3 direction, float speed)
     {
-        Vector3 moveVector = direction.normalized * _ship.MoveSpeed * Time.deltaTime;
+        Vector3 moveVector = direction.normalized * speed * Time.deltaTime;
         _rigidbody.AddForce(moveVector, ForceMode.Force);
     }
 
-    public void RotateWithLerp(Vector3 direction)
+    public void RotateWithPower(Vector3 direction, float speed)
     {
         Quaternion lookRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, _ship.RotationSpeed * Time.deltaTime);
-    }
-
-    public void RotateWithPower(Vector3 direction)
-    {
-        Quaternion lookRotation = Quaternion.LookRotation(direction);
-        _rigidbody.AddTorque(Vector3.Cross(transform.forward, direction.normalized) * _ship.RotationSpeed, ForceMode.Acceleration);
+        _rigidbody.AddTorque(Vector3.Cross(transform.forward, direction.normalized) * speed, ForceMode.Acceleration);
     }
 }

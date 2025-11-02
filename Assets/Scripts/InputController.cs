@@ -7,11 +7,17 @@ public class InputController : MonoBehaviour
     private string _horizontalInputName = "Horizontal";
     private string _verticalInputName = "Vertical";
 
+    private KeyCode _ApplyPickupItemKey = KeyCode.E;
+
+    [SerializeField] private PickupCollector _pickupCollector;
+    [SerializeField] private Ship _ship;
+
     private MoveController _moveController;
 
     private Vector3 _inputAxis;
 
     private bool _isMoving = false;
+    private bool _isApplyingPickup = false;
 
 
     private void Awake()
@@ -21,15 +27,34 @@ public class InputController : MonoBehaviour
 
     private void Update()
     {
-        ReadInput();
+        ReadMoveInput();
+        ReadApplyPickupInput();
     }
 
     private void FixedUpdate()
     {
-        HandleInput();
+        HandleMoveInput();
+        HandleApplyPickupInput();
     }
 
-    private void ReadInput()
+    private void HandleApplyPickupInput()
+    {
+        if (_isApplyingPickup)
+        {
+            HandleApplyPickupItem();
+            _isApplyingPickup = false;
+        }
+    }
+
+    private void ReadApplyPickupInput()
+    {
+        if (Input.GetKeyDown(_ApplyPickupItemKey))
+        {
+            _isApplyingPickup = true;
+        }
+    }
+
+    private void ReadMoveInput()
     {
         _inputAxis = new Vector3(Input.GetAxisRaw(_horizontalInputName), 0, Input.GetAxisRaw(_verticalInputName));
 
@@ -39,14 +64,26 @@ public class InputController : MonoBehaviour
             _isMoving = false;
     }
 
-    private void HandleInput()
+    private void HandleMoveInput()
     {
         if (_isMoving)
         {
-            _moveController.MoveTo(_inputAxis);
-            _moveController.RotateWithPower(_inputAxis);
+            _moveController.MoveTo(_inputAxis, _ship.MoveSpeed);
+            _moveController.RotateWithPower(_inputAxis, _ship.RotationSpeed);
             _isMoving = false;
         }
+    }
+
+    private void HandleApplyPickupItem()
+    {
+        if (_pickupCollector.Item == null)
+        {
+            Debug.Log("No pickup item to apply");
+            return;
+        }
+
+        _pickupCollector.Item.ApplyTo(_ship);
+        _pickupCollector.ClearItem();
     }
 
     private void OnDrawGizmos()

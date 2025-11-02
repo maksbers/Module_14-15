@@ -2,17 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PickupItem : MonoBehaviour
+public abstract class PickupItem : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private SphereCollider _collider;
+
+    private void Awake()
     {
-        
+        _collider = GetComponent<SphereCollider>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public virtual void OnCollected()
     {
-        
+        _collider.enabled = false;
+    }
+
+    public abstract void ApplyTo(Ship ship);
+
+    public void DestroyItem()
+    {
+        GameObject.Destroy(this.gameObject);
     }
 }
