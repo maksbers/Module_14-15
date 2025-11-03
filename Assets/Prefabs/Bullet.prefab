@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8426721365547629133}
+  - component: {fileID: -2337061241678680600}
   - component: {fileID: 3725653538169007704}
   - component: {fileID: -7404327400238355461}
   - component: {fileID: -5547598132010140581}
@@ -35,6 +36,18 @@ Transform:
   - {fileID: 2192613547846736028}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-2337061241678680600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 183496835205940855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35d6d97bce6555e4389accfc7caec532, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3725653538169007704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47,6 +60,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a71e842f462d54a4792ddc797710fefb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _particleHit: {fileID: -2931952552378652348, guid: 48ae47f326b64cd99d4af95f8fa996e7,
+    type: 3}
   _lifeTime: 1
 --- !u!54 &-7404327400238355461
 Rigidbody:
@@ -70,7 +85,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -158,7 +173,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: b35c0fece01f87e4487d2a28f23d41b5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

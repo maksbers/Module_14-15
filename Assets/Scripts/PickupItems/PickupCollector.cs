@@ -6,12 +6,11 @@ public class PickupCollector : MonoBehaviour
 {
     [SerializeField] private Transform _pickupPoint;
 
-    [SerializeField] private float _pickupSpeed = 5f;
-
     private PickupItem _item;
 
-    public bool _isPickingUp = false;
+    [SerializeField] private float _pickupSpeed = 5f;
 
+    public bool _isPickingUp = false;
     private bool _isSlotAvailable = true;
 
     public PickupItem Item => _item;

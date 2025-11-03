@@ -1,55 +1,114 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private List<Transform> _spawnPoints;
+    private string _speedUpFlag = "SpeedUp";
+    private string _repairFlag = "Repair";
+    private string _shootFlag = "Shoot";
+
+    [SerializeField] private PickupItem _speedUpPrefab;
+    [SerializeField] private PickupItem _repairPrefab;
+    [SerializeField] private PickupItem _shootPrefab;
+
+    [SerializeField] private List<Platform> _platforms;
     [SerializeField] private List<PickupItem> _pickupItemPrefabs;
 
-    [SerializeField] private float _spawnSpeed = 2;
+    [SerializeField] private float _cooldown = 7;
     [SerializeField] private int _initialItemsCount = 3;
 
-    private void Awake()
+    public float _timer;
+
+
+    private void Start()
     {
-        GenerateInitialItems();
+        InitialSpawnItems();
     }
 
-    private void GenerateInitialItems()
+    private void Update()
     {
-        for (int i = 0; i < _initialItemsCount; i++ )
+        SpawnWithTimer();
+    }
+
+    private void SpawnWithTimer()
+    {
+        _timer += Time.deltaTime;
+
+        if (_timer >= _cooldown)
         {
-            Vector3 spawnPosition = GenerateSpawnCoordinates();
-            SpawnItemIn(spawnPosition);
+            int freeIndex = GetFreePositionIndex();
+
+            if (freeIndex != -1)
+            {
+                Vector3 spawnPosition = _platforms[freeIndex].transform.position;
+                SpawnItemAt(spawnPosition, freeIndex);
+            }
+
+            _timer = 0f;
         }
     }
 
-    private void RunGenerationByTimer()
+    private void SpawnItemAt(Vector3 spawnPoint, int parentIndex)
     {
+        PickupItem item = GetRandomItem();
+        PickupItem instance = Instantiate(item, spawnPoint, Quaternion.identity);
 
+        Platform platform = _platforms[parentIndex];
+        instance.SetOwnerPlatform(platform);
+
+        SetIndicationFlag(item, platform);
     }
 
-    private void SpawnItemIn(Vector3 spawnPoint)
+    private void SetIndicationFlag(PickupItem item, Platform platform)
     {
-        PickupItem item = GenerateItem();
-        Instantiate(item, spawnPoint, Quaternion.identity);
+        if (item == _speedUpPrefab)
+            platform.ActivateWithTrigger(_speedUpFlag);
+
+        else if (item == _repairPrefab)
+            platform.ActivateWithTrigger(_repairFlag);
+
+        else if (item == _shootPrefab)
+            platform.ActivateWithTrigger(_shootFlag);
     }
 
-    private PickupItem GenerateItem()
+    private void InitialSpawnItems()
     {
-        int randomIndex = Random.Range(0, _pickupItemPrefabs.Count);
+        for (int i = 0; i < _initialItemsCount; i++ )
+        {
+            int freeIndex = GetFreePositionIndex();
+            Vector3 spawnPosition = _platforms[freeIndex].transform.position;
 
-        PickupItem item = _pickupItemPrefabs[randomIndex];
+            SpawnItemAt(spawnPosition, freeIndex);
+        }
+    }
 
+    private int GetFreePositionIndex()
+    {
+        List<int> freePositionIndexes = new List<int>();
+
+        for (int i = 0; i < _platforms.Count; i++)
+        {
+            bool isFree = (_platforms[i].IsActive == false);
+
+            if (isFree)
+                freePositionIndexes.Add(i);
+        }
+
+        if (freePositionIndexes.Count == 0)
+            return -1;
+
+        int randomFreePositionIndex = freePositionIndexes[Random.Range(0, freePositionIndexes.Count)];
+
+        return randomFreePositionIndex;
+    }
+
+    private PickupItem GetRandomItem()
+    {
+        int index = Random.Range(0, _pickupItemPrefabs.Count);
+
+        PickupItem item = _pickupItemPrefabs[index];
         return item;
-    }
-
-    private Vector3 GenerateSpawnCoordinates()
-    {
-        int randomIndex = Random.Range(0, _spawnPoints.Count);
-
-        Vector3 spawnPoint = _spawnPoints[randomIndex].position;
-
-        return spawnPoint;
     }
 }
